@@ -222,7 +222,6 @@ def calculate_average_hd95_batch(pred_batch, gt_batch, num_classes=4, penalty_va
                 value = hd95(pred_c, gt_c)
                 class_hd95[c].append(value)
             except Exception as e:
-                print(f"⚠️ Error on sample {i}, class {c}: {e}")
                 class_hd95[c].append(penalty_value)
     results = {}
     for c in range(1, num_classes):
