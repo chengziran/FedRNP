@@ -2,9 +2,12 @@
 import random
 import time
 import os
+
 from setting import parse_opt
+
 sets = parse_opt()
 os.environ['CUDA_VISIBLE_DEVICES'] = sets.gpu
+
 import torch
 import copy
 import utils
@@ -14,12 +17,11 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.nn.utils import parameters_to_vector, vector_to_parameters
-from train import Agent
-from setting import parse_opt
-from aggregation import Aggregation
-from aggregation import Aggregation_aux
+
+from train.local_train import Agent
+from aggregation.agg import Aggregation, Aggregation_aux
 from medpy.metric.binary import dc, hd95
-from model import UNet2
+from model.unet_model import UNet2
 
 
 
@@ -139,7 +141,7 @@ def train():
             total_sensitive = 0.0
 
             for vid in range(6):
-                valid_data = utils.get_train_data_loader(1, f"valid_data/train_data_{vid}")
+                valid_data = dataset.dataload.get_train_data_loader(1, f"valid_data/train_data_{vid}")
 
                 loss1 = loss2 = loss3 = 0.0
                 dice1 = dice2 = dice3 = 0.0
@@ -245,7 +247,7 @@ def test():
         test_results = []
         for i in range(6):
             print(f"\n========== 测试集{i} ==========")
-            test_data = utils.get_train_data_loader(1, "test_data/train_data_" + str(i))
+            test_data = dataset.dataload.get_train_data_loader(1, "test_data/train_data_" + str(i))
             dice1 = dice2 = dice3 = 0.0
             total_samples = 0
             num_classes = 4  
